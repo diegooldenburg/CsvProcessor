@@ -1,8 +1,6 @@
-using System.Diagnostics;
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Transfer;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CsvProcessor.Controllers
