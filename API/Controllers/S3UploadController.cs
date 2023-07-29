@@ -24,6 +24,9 @@ namespace CsvProcessor.Controllers
                 if (File == null || File.Length == 0)
                     return BadRequest("No file uploaded.");
 
+                if (!File.FileName.EndsWith(".csv"))
+                    return BadRequest("File is not a .csv file.");
+
                 //Generate unique key for file
                 string uniqueKey = $"{DateTime.Now.Ticks}-{File.FileName}";
 
