@@ -3,6 +3,13 @@ import axios from "axios";
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [outputType, setOutputType] = useState("csv");
+  const [sortBy, setSortBy] = useState([
+    { column: "", type: "default", order: "default" },
+    { column: "", type: "default", order: "default" },
+    { column: "", type: "default", order: "default" },
+  ]);
+  const [dropNull, setDropNull] = useState(false);
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -14,6 +21,14 @@ const FileUpload = () => {
         alert("Please select a file to upload.");
         return;
       }
+
+      const options = {
+        outputType,
+        sortBy,
+        dropNull,
+      };
+
+      await axios.post("/upload-options", options);
 
       const formData = new FormData();
       formData.append("File", selectedFile);
@@ -31,7 +46,7 @@ const FileUpload = () => {
   };
 
   return (
-    <div class="flex place-content-center gap-4">
+    <div class=" flex flex-col items-center justify-center gap-4 mx-auto">
       <div class="rounded-md border-2 border-black bg-neutral-500 p-4 shadow-md hover:bg-neutral-400 w-32">
         <label
           for="upload"
@@ -59,6 +74,84 @@ const FileUpload = () => {
           onChange={handleFileChange}
         />
       </div>
+      <span class="font-display text-white">Select output type.</span>
+      <select
+        class="rounded-md border-2 border-black bg-neutral-500 p-2 shadow-md hover:bg-neutral-400 w-32 text-white font-display"
+        value={outputType}
+        onChange={(e) => setOutputType(e.target.value)}
+      >
+        <option class="font-display" value="csv">
+          CSV
+        </option>
+        <option class="font-display" value="json">
+          JSON
+        </option>
+        <option class="font-display" value="xml">
+          XML
+        </option>
+        <option class="font-display" value="yaml">
+          YAML
+        </option>
+        <option class="font-display" value="sqlinsert">
+          SQL Insert
+        </option>
+      </select>
+      <span class="font-display text-white">Select sort options.</span>
+      <div class="flex gap-4">
+        {sortBy.map((sort, index) => (
+          <div
+            key={index}
+            class="rounded-md border-2 border-black bg-neutral-500 p-4 shadow-md w-64 flex flex-col gap-2"
+          >
+            <input
+              class="font-display rounded-md border-2 border-black bg-neutral-200 p-1 shadow-md"
+              type="text"
+              placeholder={index === 0 ? "Sort by" : "Then sort by"}
+              value={sort.column}
+              onChange={(e) => {
+                const newSortBy = [...sortBy];
+                newSortBy[index].column = e.target.value;
+                setSortBy(newSortBy);
+              }}
+            />
+            <select
+              class="font-display rounded-md border-2 border-black bg-neutral-200 p-1 shadow-md"
+              value={sort.type}
+              onChange={(e) => {
+                const newSortBy = [...sortBy];
+                newSortBy[index].type = e.target.value;
+                setSortBy(newSortBy);
+              }}
+            >
+              <option value="default">Default</option>
+              <option value="string">String</option>
+              <option value="numeric">Numeric</option>
+            </select>
+            <select
+              class="font-display rounded-md border-2 border-black bg-neutral-200 p-1 shadow-md"
+              value={sort.order}
+              onChange={(e) => {
+                const newSortBy = [...sortBy];
+                newSortBy[index].order = e.target.value;
+                setSortBy(newSortBy);
+              }}
+            >
+              <option value="default">Default</option>
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
+        ))}
+      </div>
+      <label class="font-display text-white">
+        <input
+          type="checkbox"
+          class="bg-black border-black focus:ring-3 focus:ring-orange-500 h-4 w-4 rounded mr-2"
+          checked={dropNull}
+          onChange={(e) => setDropNull(e.target.checked)}
+        />
+        Drop rows with containing null values?
+      </label>
       <button
         onClick={handleFileUpload}
         className="flex flex-col items-center gap-2 bg-neutral-500 border-2 border-black p-4 shadow-md rounded-md cursor-pointer hover:bg-neutral-400 w-32"
