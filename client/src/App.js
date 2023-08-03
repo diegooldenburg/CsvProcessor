@@ -7,7 +7,9 @@ axios.defaults.baseURL = "https://localhost:5001";
 function App() {
   return (
     <div className="App">
-      <h1 class="mb-2 text-center font-display text-2xl">CSV Processor</h1>
+      <h1 class="mb-4 mt-2 text-center font-display text-2xl text-white">
+        CSV Processor
+      </h1>
       <FileUpload />
     </div>
   );
