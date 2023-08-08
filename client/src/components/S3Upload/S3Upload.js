@@ -10,6 +10,7 @@ const FileUpload = () => {
     { column: "", type: "default", order: "default" },
   ]);
   const [dropNull, setDropNull] = useState(false);
+  const now = new Date();
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -23,17 +24,19 @@ const FileUpload = () => {
       }
 
       const options = {
-        outputType,
-        sortBy,
-        dropNull,
+        FileName: `${now.getTime()}-${selectedFile.name}`,
+        OutputType: outputType,
+        SortBy: sortBy,
+        DropNull: dropNull,
       };
 
-      await axios.post("/upload-options", options);
+      await axios.post("upload-options", options);
 
       const formData = new FormData();
       formData.append("File", selectedFile);
+      formData.append("FileName", `${now.getTime()}-${selectedFile.name}`);
 
-      const response = await axios.post("/upload-csv", formData, {
+      const response = await axios.post("upload-csv", formData, {
         maxRedirects: 0,
         withCredentials: false,
       });

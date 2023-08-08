@@ -17,7 +17,7 @@ namespace CsvProcessor.Controllers
         }
 
         [HttpPost("upload-csv")]
-        public async Task<IActionResult> UploadCsv([FromForm] IFormFile File)
+        public async Task<IActionResult> UploadCsv([FromForm] IFormFile File, string FileName)
         {
             try
             {
@@ -27,14 +27,10 @@ namespace CsvProcessor.Controllers
                 if (!File.FileName.EndsWith(".csv"))
                     return BadRequest("File is not a .csv file.");
 
-                //Generate unique key for file
-                string uniqueKey = $"{DateTime.Now.Ticks}-{File.FileName}";
-
-                //Upload file to S3 bucket
                 await using (var stream = File.OpenReadStream())
                 {
                     var transferUtility = new TransferUtility(s3Client);
-                    await transferUtility.UploadAsync(stream, bucketName, uniqueKey);
+                    await transferUtility.UploadAsync(stream, bucketName, FileName);
                 }
 
                 return Ok(new { Message = "File successfully uploaded." });

@@ -5,12 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class ProcessingOptionsController : ControllerBase
     {
         private readonly IAmazonDynamoDB _dynamoDbClient;
-        private const string TableName = "CsvProcessingOptions";
+        // private const string TableName = "CsvProcessingOptions";
 
         public ProcessingOptionsController()
         {
@@ -33,17 +31,17 @@ namespace API.Controllers
         }
     }
 
+    [DynamoDBTable("CsvProcessingOptions")]
     public class ProcessingOptions
     {
         [DynamoDBHashKey]
-        public string Id { get; set; }
-
+        public string FileName { get; set; } //Partition key
         public string OutputType { get; set; }
-        public List<SortOption> SortBy { get; set; }
+        public List<SortingOptions> SortBy { get; set; }
         public bool DropNull { get; set; }
     }
 
-    public class SortOption
+    public class SortingOptions
     {
         public string Column { get; set; }
         public string Type { get; set; }
