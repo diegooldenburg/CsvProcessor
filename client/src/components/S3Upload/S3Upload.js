@@ -79,7 +79,7 @@ const FileUpload = () => {
       </div>
       <span class="font-display text-white">Select output type.</span>
       <select
-        class="rounded-md border-2 border-black bg-neutral-500 p-2 shadow-md hover:bg-neutral-400 w-32 text-white font-display"
+        class="font-display text-white rounded-md border-2 border-black bg-neutral-500 p-2 w-32 shadow-md"
         value={outputType}
         onChange={(e) => setOutputType(e.target.value)}
       >
@@ -99,7 +99,7 @@ const FileUpload = () => {
           SQL Insert
         </option>
       </select>
-      <span class="font-display text-white">Select sort options.</span>
+      <span class="font-display text-white">Select sorting options.</span>
       <div class="flex gap-4">
         {sortBy.map((sort, index) => (
           <div

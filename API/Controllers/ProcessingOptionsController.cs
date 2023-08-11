@@ -8,7 +8,6 @@ namespace API.Controllers
     public class ProcessingOptionsController : ControllerBase
     {
         private readonly IAmazonDynamoDB _dynamoDbClient;
-        // private const string TableName = "CsvProcessingOptions";
 
         public ProcessingOptionsController()
         {
@@ -35,16 +34,16 @@ namespace API.Controllers
     public class ProcessingOptions
     {
         [DynamoDBHashKey]
-        public string FileName { get; set; } //Partition key
-        public string OutputType { get; set; }
-        public List<SortingOptions> SortBy { get; set; }
+        public string? FileName { get; set; } //Partition key
+        public string? OutputType { get; set; }
+        public List<SortingOptions>? SortBy { get; set; }
         public bool DropNull { get; set; }
     }
 
     public class SortingOptions
     {
-        public string Column { get; set; }
-        public string Type { get; set; }
-        public string Order { get; set; }
+        public string? Column { get; set; }
+        public string? Type { get; set; }
+        public string? Order { get; set; }
     }
 }
