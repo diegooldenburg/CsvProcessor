@@ -17,9 +17,9 @@ function App() {
           CSV Processor
         </h1>
         <FileSelector />
-        <NullDropper />
         <OutputTypeSelector />
         <SortBySelector />
+        <NullDropper />
         <UploadButton />
       </div>
       <a
