@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import UploadContext from "../../UploadContext";
 import axios from "axios";
-import Path from "path";
 
 function UploadProvider({ children }) {
   const now = new Date();
@@ -22,6 +21,10 @@ function UploadProvider({ children }) {
       console.log("WebSocket connection opened");
     };
 
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
     ws.onmessage = (event) => {
       let message;
       try {
@@ -39,10 +42,11 @@ function UploadProvider({ children }) {
         const link = document.createElement("a");
         link.href = downloadUrl;
 
-        link.download = `${Path.basename(
-          selectedFile.name,
-          Path.extname(selectedFile.name)
-        )}.${outputType}`;
+        const fileNameWithoutExtension = selectedFile.name
+          .split(".")
+          .slice(0, -1)
+          .join(".");
+        link.download = `${fileNameWithoutExtension}.${outputType}`;
 
         link.click();
       } else {
@@ -57,7 +61,7 @@ function UploadProvider({ children }) {
     return () => {
       ws.close();
     };
-  }, []);
+  });
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
