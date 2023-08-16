@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import UploadContext from "../../UploadContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 function UploadProvider({ children }) {
@@ -70,7 +72,16 @@ function UploadProvider({ children }) {
   const handleFileUpload = async () => {
     try {
       if (!selectedFile) {
-        alert("Please select a file to upload.");
+        toast.error("Please select a file to upload.", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
         return;
       }
 
@@ -95,10 +106,28 @@ function UploadProvider({ children }) {
         withCredentials: false,
       });
       console.log(response.data.Message);
-      alert("File successfully uploaded.");
+      toast.success("File successfully uploaded.", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     } catch (error) {
       console.error(error);
-      alert("An error occurred while uploading the file.");
+      toast.error("An error occurred while uploading the file.", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
 

@@ -6,6 +6,7 @@ import OutputTypeSelector from "./components/OutputTypeSelector/OutputTypeSelect
 import SortBySelector from "./components/SortBySelector/SortBySelector";
 import UploadButton from "./components/UploadButton/UploadButton";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 axios.defaults.baseURL = "https://localhost:5001";
 
@@ -21,6 +22,7 @@ function App() {
         <SortBySelector />
         <NullDropper />
         <UploadButton />
+        <ToastContainer></ToastContainer>
       </div>
       <a
         href="https://github.com/diegooldenburg/CsvProcessor"
