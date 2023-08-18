@@ -15,9 +15,12 @@ function UploadProvider({ children }) {
   ]);
   const [dropNull, setDropNull] = useState(false);
   const [connectionId, setConnectionId] = useState(null);
+  const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+    if (!ws) {
+      return;
+    }
 
     ws.onopen = () => {
       console.log("WebSocket connection opened");
@@ -25,6 +28,7 @@ function UploadProvider({ children }) {
 
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
+      console.error("Error event:", error.event);
     };
 
     ws.onmessage = (event) => {
@@ -35,6 +39,8 @@ function UploadProvider({ children }) {
         console.error("Failed to parse message:", event.data);
         return;
       }
+      console.log("WebSocket message at onmessage:", message);
+      console.log("connectionId at onmessage:", connectionId);
 
       if (message.type === "connectionId") {
         setConnectionId(message.connectionId);
@@ -63,7 +69,7 @@ function UploadProvider({ children }) {
     return () => {
       ws.close();
     };
-  });
+  }, [ws]); //es-lint disable-line react-hooks/exhaustive-deps
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -84,9 +90,11 @@ function UploadProvider({ children }) {
         });
         return;
       }
-
+      console.log("websocket connectionId before options:", connectionId);
       const options = {
-        FileName: `${now.getTime()}-${connectionId}-${selectedFile.name}`,
+        FileName: `${now.getTime()}-${connectionId ? `${connectionId}-` : ""}${
+          selectedFile.name
+        }`,
         OutputType: outputType,
         SortBy: sortBy,
         DropNull: dropNull,
@@ -116,6 +124,8 @@ function UploadProvider({ children }) {
         progress: undefined,
         theme: "dark",
       });
+      const newWs = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+      setWs(newWs);
     } catch (error) {
       console.error(error);
       toast.error("An error occurred while uploading the file.", {
